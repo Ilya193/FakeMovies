@@ -6,4 +6,6 @@
     <string name="service_unavailable">Сервер недоступен</string>
     <string name="something_went_wrong">Произошла ошибка</string>
     <string name="retry">Попробовать снова</string>
+    <string name="year">Год выпуска:</string>
+    <string name="rating">Рейтинг:</string>
 </resources>

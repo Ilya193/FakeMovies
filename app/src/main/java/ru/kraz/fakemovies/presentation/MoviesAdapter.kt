@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.studying.presentation.DiffUtilCallback
+import ru.kraz.fakemovies.R
 import ru.kraz.fakemovies.databinding.MovieItemBinding
 
 class MoviesAdapter(
@@ -14,7 +15,9 @@ class MoviesAdapter(
     class ViewHolder(private val view: MovieItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(item: MovieUi) {
             item as MovieUi.Success
-            view.image.load(item.imageUrl)
+            view.image.load(item.imageUrl) {
+                error(R.drawable.ic_error)
+            }
             view.tvName.text = item.name
         }
     }
