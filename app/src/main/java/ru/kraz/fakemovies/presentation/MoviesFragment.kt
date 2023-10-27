@@ -80,6 +80,8 @@ class MoviesFragment : Fragment() {
             binding.containerError.visibility =
                 if (it is MovieUiState.Error) View.VISIBLE else View.GONE
             binding.tvError.text = if (it is MovieUiState.Error) it.msg else ""
+            binding.chipGroup.visibility =
+                if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
             binding.rvMovies.visibility =
                 if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
             if (it is MovieUiState.Success) adapter.submitList(it.list)

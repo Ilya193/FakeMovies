@@ -59,7 +59,8 @@ class MainViewModel @Inject constructor(
             val temp = mutableListOf<MovieUi.Success>()
             genres.forEach { genre ->
                 movies.forEach { movie ->
-                    if (movie.genres.any { it == genre }) temp.add(movie)
+                    if (movie.genres.any { it == genre})
+                        if (!temp.contains(movie)) temp.add(movie)
                 }
             }
             _uiState.postValue(MovieUiState.Filter(temp))
