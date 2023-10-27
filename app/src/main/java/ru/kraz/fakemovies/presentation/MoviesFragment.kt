@@ -8,8 +8,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.kraz.fakemovies.R
 import ru.kraz.fakemovies.databinding.FragmentMoviesBinding
@@ -49,6 +47,25 @@ class MoviesFragment : Fragment() {
     private fun settingClickListener() {
         binding.btnRetry.setOnClickListener {
             mainViewModel.fetchMovies()
+        }
+
+        binding.chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            val genres = mutableListOf<String>()
+            checkedIds.forEach { chipId ->
+                if (chipId == binding.horrorChip.id) genres.add("ужасы")
+                if (chipId == binding.comedyChip.id) genres.add("комедия")
+                if (chipId == binding.adventuresChip.id) genres.add("приключения")
+                if (chipId == binding.fantasticChip.id) genres.add("фантастика")
+                if (chipId == binding.thrillerChip.id) genres.add("триллер")
+                if (chipId == binding.dramaChip.id) genres.add("драма")
+                if (chipId == binding.crimeChip.id) genres.add("криминал")
+                if (chipId == binding.actionChip.id) genres.add("боевик")
+                if (chipId == binding.musicalChip.id) genres.add("мюзикл")
+                if (chipId == binding.detectiveChip.id) genres.add("детектив")
+                if (chipId == binding.biographyChip.id) genres.add("биография")
+                if (chipId == binding.melodramaChip.id) genres.add("мелодрама")
+            }
+            mainViewModel.moviesFilter(genres)
         }
     }
 

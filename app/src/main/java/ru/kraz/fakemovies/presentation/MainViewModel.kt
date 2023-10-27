@@ -1,6 +1,5 @@
 package ru.kraz.fakemovies.presentation
 
-import android.graphics.Movie
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +20,8 @@ class MainViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
 ) : ViewModel() {
 
+    private var movies = mutableListOf<MovieUi.Success>()
+
     private val _movie = MutableLiveData<EventWrapper<MovieUi.Success>>()
     val movie: LiveData<EventWrapper<MovieUi.Success>> get() = _movie
 
@@ -31,10 +32,12 @@ class MainViewModel @Inject constructor(
         _uiState.postValue(MovieUiState.Loading)
         when (val result = fetchMoviesUseCase()) {
             is ResultFDS.Success -> {
-                val movies = result.data.map {
+                val temp = result.data.map {
                     mapper.map(it)
                 }
-                _uiState.postValue(MovieUiState.Success(movies))
+                movies.clear()
+                temp.forEach { movies.add(it as MovieUi.Success) }
+                _uiState.postValue(MovieUiState.Success(temp))
             }
 
             is ResultFDS.Error -> _uiState.postValue(
@@ -45,5 +48,19 @@ class MainViewModel @Inject constructor(
 
     fun setMovie(movie: MovieUi.Success) {
         _movie.value = EventWrapper.Single(movie)
+    }
+
+    fun moviesFilter(genres: List<String>) = viewModelScope.launch(Dispatchers.IO) {
+        if (genres.isEmpty())
+            _uiState.postValue(MovieUiState.Success(movies.map { it.copy() }))
+        else {
+            val temp = mutableListOf<MovieUi.Success>()
+            genres.forEach { genre ->
+                movies.forEach { movie ->
+                    if (movie.genres.any { it == genre }) temp.add(movie)
+                }
+            }
+            _uiState.postValue(MovieUiState.Success(temp))
+        }
     }
 }

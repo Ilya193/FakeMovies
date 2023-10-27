@@ -8,4 +8,16 @@
     <string name="retry">Попробовать снова</string>
     <string name="year">Год выпуска:</string>
     <string name="rating">Рейтинг:</string>
+    <string name="horror">ужасы</string>
+    <string name="comedy">комедия</string>
+    <string name="adventures">приключения</string>
+    <string name="fantastic">фантастика</string>
+    <string name="thriller">триллер</string>
+    <string name="drama">драма</string>
+    <string name="crime">криминал</string>
+    <string name="action">боевик</string>
+    <string name="musical">мюзикл</string>
+    <string name="detective">детектив</string>
+    <string name="biography">биография</string>
+    <string name="melodrama">мелодрама</string>
 </resources>
