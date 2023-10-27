@@ -77,10 +77,13 @@ class MoviesFragment : Fragment() {
         mainViewModel.fetchMovies()
         mainViewModel.uiState.observe(viewLifecycleOwner) {
             binding.loading.visibility = if (it is MovieUiState.Loading) View.VISIBLE else View.GONE
-            binding.containerError.visibility = if (it is MovieUiState.Error) View.VISIBLE else View.GONE
+            binding.containerError.visibility =
+                if (it is MovieUiState.Error) View.VISIBLE else View.GONE
             binding.tvError.text = if (it is MovieUiState.Error) it.msg else ""
-            binding.rvMovies.visibility = if (it is MovieUiState.Success) View.VISIBLE else View.GONE
+            binding.rvMovies.visibility =
+                if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
             if (it is MovieUiState.Success) adapter.submitList(it.list)
+            if (it is MovieUiState.Filter) adapter.submitList(it.list)
         }
     }
 

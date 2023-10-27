@@ -29,20 +29,22 @@ class MainViewModel @Inject constructor(
     val uiState: LiveData<MovieUiState> get() = _uiState
 
     fun fetchMovies() = viewModelScope.launch(Dispatchers.IO) {
-        _uiState.postValue(MovieUiState.Loading)
-        when (val result = fetchMoviesUseCase()) {
-            is ResultFDS.Success -> {
-                val temp = result.data.map {
-                    mapper.map(it)
+        if (_uiState.value !is MovieUiState.Filter) {
+            _uiState.postValue(MovieUiState.Loading)
+            when (val result = fetchMoviesUseCase()) {
+                is ResultFDS.Success -> {
+                    val temp = result.data.map {
+                        mapper.map(it)
+                    }
+                    movies.clear()
+                    temp.forEach { movies.add(it as MovieUi.Success) }
+                    _uiState.postValue(MovieUiState.Success(temp))
                 }
-                movies.clear()
-                temp.forEach { movies.add(it as MovieUi.Success) }
-                _uiState.postValue(MovieUiState.Success(temp))
-            }
 
-            is ResultFDS.Error -> _uiState.postValue(
-                MovieUiState.Error(resourceProvider.getString(result.e))
-            )
+                is ResultFDS.Error -> _uiState.postValue(
+                    MovieUiState.Error(resourceProvider.getString(result.e))
+                )
+            }
         }
     }
 
@@ -60,7 +62,7 @@ class MainViewModel @Inject constructor(
                     if (movie.genres.any { it == genre }) temp.add(movie)
                 }
             }
-            _uiState.postValue(MovieUiState.Success(temp))
+            _uiState.postValue(MovieUiState.Filter(temp))
         }
     }
 }
