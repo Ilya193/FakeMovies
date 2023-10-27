@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import ru.kraz.fakemovies.R
 import ru.kraz.fakemovies.databinding.ActivityMainBinding
 
 @AndroidEntryPoint

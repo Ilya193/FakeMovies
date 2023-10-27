@@ -23,6 +23,12 @@ class MoviesFragment : Fragment() {
     private val adapter = MoviesAdapter { movie ->
         mainViewModel.setMovie(movie)
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
             .replace(R.id.fragmentContainer, DetailsFragment.newInstance())
             .addToBackStack(null)
             .commit()
@@ -80,7 +86,7 @@ class MoviesFragment : Fragment() {
             binding.containerError.visibility =
                 if (it is MovieUiState.Error) View.VISIBLE else View.GONE
             binding.tvError.text = if (it is MovieUiState.Error) it.msg else ""
-            binding.chipGroup.visibility =
+            binding.containerGenres.visibility =
                 if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
             binding.rvMovies.visibility =
                 if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
