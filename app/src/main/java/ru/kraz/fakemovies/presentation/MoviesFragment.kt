@@ -90,8 +90,15 @@ class MoviesFragment : Fragment() {
                 if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
             binding.rvMovies.visibility =
                 if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
+            binding.rvMovies.postDelayed({
+                binding.rvMovies.scrollToPosition(0)
+            }, 10)
             if (it is MovieUiState.Success) adapter.submitList(it.list)
             if (it is MovieUiState.Filter) adapter.submitList(it.list)
+            if (it is MovieUiState.Success || it is MovieUiState.Filter)
+                binding.rvMovies.postDelayed({
+                    binding.rvMovies.scrollToPosition(0)
+                }, 10)
         }
     }
 
