@@ -12,7 +12,7 @@ import ru.kraz.fakemovies.databinding.MovieItemBinding
 class MoviesAdapter(
     private val onClick: (MovieUi.Success) -> Unit,
 ) : ListAdapter<MovieUi, MoviesAdapter.ViewHolder>(DiffUtilCallback<MovieUi>()) {
-    class ViewHolder(private val view: MovieItemBinding) : RecyclerView.ViewHolder(view.root) {
+    inner class ViewHolder(private val view: MovieItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(item: MovieUi) {
             item as MovieUi.Success
             view.image.load(item.imageUrl) {

@@ -25,11 +25,11 @@ class MainViewModel @Inject constructor(
     private val _movie = MutableLiveData<EventWrapper<MovieUi.Success>>()
     val movie: LiveData<EventWrapper<MovieUi.Success>> get() = _movie
 
-    private val _uiState = MutableLiveData<MovieUiState>()
+    private val _uiState = MutableLiveData<MovieUiState>(MovieUiState.Empty)
     val uiState: LiveData<MovieUiState> get() = _uiState
 
-    fun fetchMovies() = viewModelScope.launch(Dispatchers.IO) {
-        if (_uiState.value !is MovieUiState.SuccessFilter) {
+    fun fetchMovies(get: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
+        if (_uiState.value is MovieUiState.Empty || get) {
             _uiState.postValue(MovieUiState.Loading)
             when (val result = fetchMoviesUseCase()) {
                 is ResultFDS.Success -> {

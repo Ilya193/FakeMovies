@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import ru.kraz.fakemovies.R
 import ru.kraz.fakemovies.databinding.FragmentMoviesBinding
@@ -48,10 +50,10 @@ class MoviesFragment : Fragment() {
         setFragmentResult("actionBack", bundleOf("button" to false))
         settingRecyclerView()
         settingViewModel()
-        settingClickListener()
+        setListeners()
     }
 
-    private fun settingClickListener() {
+    private fun setListeners() {
         binding.btnRetry.setOnClickListener {
             mainViewModel.fetchMovies()
         }
@@ -74,6 +76,11 @@ class MoviesFragment : Fragment() {
             }
             mainViewModel.moviesFilter(genres)
         }
+
+        binding.swipeToRefresh.setOnRefreshListener {
+            mainViewModel.fetchMovies(true)
+            for (item in binding.chipGroup.children) (item as Chip).isChecked = false
+        }
     }
 
     private fun settingRecyclerView() {
@@ -92,7 +99,10 @@ class MoviesFragment : Fragment() {
                 if (state.isSuccess()) View.VISIBLE else View.GONE
             binding.rvMovies.visibility =
                 if (state.isSuccess()) View.VISIBLE else View.GONE
-            if (state is MovieUiState.Success) adapter.submitList(state.list)
+            if (state is MovieUiState.Success) {
+                adapter.submitList(state.list)
+                binding.swipeToRefresh.isRefreshing = false
+            }
             if (state is MovieUiState.SuccessFilter) adapter.submitList(state.list)
             if (state.isSuccess())
                 binding.rvMovies.postDelayed({

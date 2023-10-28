@@ -26,6 +26,7 @@ sealed interface MovieUi : Comparing<MovieUi> {
 sealed interface MovieUiState {
     data class Success(val list: List<MovieUi>): MovieUiState
     data class SuccessFilter(val list: List<MovieUi>): MovieUiState
+    data object Empty : MovieUiState
     data class Error(val msg: String) : MovieUiState
     data object Loading : MovieUiState
 
