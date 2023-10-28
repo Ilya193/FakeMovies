@@ -11,6 +11,7 @@ import androidx.fragment.app.setFragmentResult
 import dagger.hilt.android.AndroidEntryPoint
 import ru.kraz.fakemovies.R
 import ru.kraz.fakemovies.databinding.FragmentMoviesBinding
+import ru.kraz.fakemovies.presentation.MovieUiState.Loading.isSuccess
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
@@ -81,21 +82,19 @@ class MoviesFragment : Fragment() {
 
     private fun settingViewModel() {
         mainViewModel.fetchMovies()
-        mainViewModel.uiState.observe(viewLifecycleOwner) {
-            binding.loading.visibility = if (it is MovieUiState.Loading) View.VISIBLE else View.GONE
+        mainViewModel.uiState.observe(viewLifecycleOwner) { state ->
+            binding.loading.visibility =
+                if (state is MovieUiState.Loading) View.VISIBLE else View.GONE
             binding.containerError.visibility =
-                if (it is MovieUiState.Error) View.VISIBLE else View.GONE
-            binding.tvError.text = if (it is MovieUiState.Error) it.msg else ""
+                if (state is MovieUiState.Error) View.VISIBLE else View.GONE
+            binding.tvError.text = if (state is MovieUiState.Error) state.msg else ""
             binding.containerGenres.visibility =
-                if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
+                if (state.isSuccess()) View.VISIBLE else View.GONE
             binding.rvMovies.visibility =
-                if (it is MovieUiState.Success || it is MovieUiState.Filter) View.VISIBLE else View.GONE
-            binding.rvMovies.postDelayed({
-                binding.rvMovies.scrollToPosition(0)
-            }, 10)
-            if (it is MovieUiState.Success) adapter.submitList(it.list)
-            if (it is MovieUiState.Filter) adapter.submitList(it.list)
-            if (it is MovieUiState.Success || it is MovieUiState.Filter)
+                if (state.isSuccess()) View.VISIBLE else View.GONE
+            if (state is MovieUiState.Success) adapter.submitList(state.list)
+            if (state is MovieUiState.SuccessFilter) adapter.submitList(state.list)
+            if (state.isSuccess())
                 binding.rvMovies.postDelayed({
                     binding.rvMovies.scrollToPosition(0)
                 }, 10)
@@ -105,10 +104,5 @@ class MoviesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance() =
-            MoviesFragment()
     }
 }

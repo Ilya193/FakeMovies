@@ -21,15 +21,15 @@ sealed interface MovieUi : Comparing<MovieUi> {
         override fun same(item: MovieUi): Boolean = item is Success && id == item.id
         override fun sameContent(item: MovieUi): Boolean = this == item
     }
-
-    data class Error(
-        val msg: String,
-    ) : MovieUi
 }
 
 sealed interface MovieUiState {
     data class Success(val list: List<MovieUi>): MovieUiState
-    data class Filter(val list: List<MovieUi>): MovieUiState
+    data class SuccessFilter(val list: List<MovieUi>): MovieUiState
     data class Error(val msg: String) : MovieUiState
     data object Loading : MovieUiState
+
+    fun MovieUiState.isSuccess(): Boolean =
+        this is Success || this is SuccessFilter
 }
+

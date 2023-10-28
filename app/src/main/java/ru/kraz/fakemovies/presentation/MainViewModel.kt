@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
     val uiState: LiveData<MovieUiState> get() = _uiState
 
     fun fetchMovies() = viewModelScope.launch(Dispatchers.IO) {
-        if (_uiState.value !is MovieUiState.Filter) {
+        if (_uiState.value !is MovieUiState.SuccessFilter) {
             _uiState.postValue(MovieUiState.Loading)
             when (val result = fetchMoviesUseCase()) {
                 is ResultFDS.Success -> {
@@ -63,7 +63,7 @@ class MainViewModel @Inject constructor(
                         if (!temp.contains(movie)) temp.add(movie)
                 }
             }
-            _uiState.postValue(MovieUiState.Filter(temp))
+            _uiState.postValue(MovieUiState.SuccessFilter(temp))
         }
     }
 }
