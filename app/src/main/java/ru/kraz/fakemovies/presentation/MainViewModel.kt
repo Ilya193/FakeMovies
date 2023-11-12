@@ -36,8 +36,9 @@ class MainViewModel @Inject constructor(
                     val temp = result.data.map {
                         mapper.map(it)
                     }
-                    movies.clear()
-                    temp.forEach { movies.add(it as MovieUi.Success) }
+                    movies = temp.map {
+                        (it as MovieUi.Success).copy()
+                    }.toMutableList()
                     _uiState.postValue(MovieUiState.Success(temp))
                 }
 

@@ -32,5 +32,11 @@ sealed interface MovieUiState {
 
     fun MovieUiState.isSuccess(): Boolean =
         this is Success || this is SuccessFilter
+
+    fun MovieUiState.isLoading(): Boolean =
+        this is Loading
+
+    fun MovieUiState.isError(): Boolean =
+        this is Error
 }
 

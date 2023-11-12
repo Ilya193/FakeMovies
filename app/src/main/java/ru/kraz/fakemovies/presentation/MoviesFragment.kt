@@ -13,6 +13,8 @@ import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import ru.kraz.fakemovies.R
 import ru.kraz.fakemovies.databinding.FragmentMoviesBinding
+import ru.kraz.fakemovies.presentation.MovieUiState.Loading.isError
+import ru.kraz.fakemovies.presentation.MovieUiState.Loading.isLoading
 import ru.kraz.fakemovies.presentation.MovieUiState.Loading.isSuccess
 
 @AndroidEntryPoint
@@ -91,18 +93,16 @@ class MoviesFragment : Fragment() {
         mainViewModel.fetchMovies()
         mainViewModel.uiState.observe(viewLifecycleOwner) { state ->
             binding.loading.visibility =
-                if (state is MovieUiState.Loading) View.VISIBLE else View.GONE
+                if (state.isLoading()) View.VISIBLE else View.GONE
             binding.containerError.visibility =
-                if (state is MovieUiState.Error) View.VISIBLE else View.GONE
+                if (state.isError()) View.VISIBLE else View.GONE
             binding.tvError.text = if (state is MovieUiState.Error) state.msg else ""
             binding.containerGenres.visibility =
                 if (state.isSuccess()) View.VISIBLE else View.GONE
             binding.rvMovies.visibility =
                 if (state.isSuccess()) View.VISIBLE else View.GONE
-            if (state is MovieUiState.Success) {
-                adapter.submitList(state.list)
-                binding.swipeToRefresh.isRefreshing = false
-            }
+            binding.swipeToRefresh.isRefreshing = false
+            if (state is MovieUiState.Success) adapter.submitList(state.list)
             if (state is MovieUiState.SuccessFilter) adapter.submitList(state.list)
             if (state.isSuccess())
                 binding.rvMovies.postDelayed({
